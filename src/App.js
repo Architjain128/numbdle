@@ -6,6 +6,10 @@ import KeyboardComponent from "./files/keyboard";
 import Modal from 'react-modal';
 export const AppContext = createContext();
 
+// import env variables
+
+// import {AZURE_API_KEY,AZURE_API} from '.env';
+
 function App() {
   const [board, setBoard] = useState(emptyBoard);
   const [currentRow, setCurrentRow] = useState(0);
@@ -15,6 +19,17 @@ function App() {
   const [gameRun, setGameRun] = useState(true);
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const [modalData, setModalData] = React.useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+console.log(process.env.REACT_APP_MODE);
+
+      const response = await fetch("https://archit-js.azurewebsites.net/api/nerdle?code="+process.env.REACT_APP_AZURE_API_KEY);
+      const data = await response.json();
+      setCorrectEquation(data.equation);
+    }
+    fetchData();
+  }, []);
 
   const customStyles = {
     content: {
@@ -26,7 +41,6 @@ function App() {
       transform: 'translate(-50%, -50%)',
     },
   };
-
 
   const copy=(e)=>{
     e.target.innerText="Url Copied";
@@ -174,37 +188,41 @@ function App() {
     for (let i = 0; i < 8; i++) {
       equation += board[currentRow][i];
     }
+    let lr=false;
     let leadingZeroStatus=false;
     let mathCorrectStatus=false;
     let multipleArgumentStatus=false;
-    equation=equation.split("=");
-    let lhs=equation[0];
-    let rhs=equation[1];
-    let rhsArr=rhs.replaceAll('+', ' ').replaceAll('-', ' ').replaceAll('*', ' ').replaceAll('/', ' ').split(' ');
-    if(rhsArr.length!==1){
-      multipleArgumentStatus=true;
-    }
+    if(equation.includes("=")){
+      equation=equation.split("=");
+      let lhs=equation[0];
+      let rhs=equation[1];
+      let rhsArr=rhs.replaceAll('+', ' ').replaceAll('-', ' ').replaceAll('*', ' ').replaceAll('/', ' ').split(' ');
+      if(rhsArr.length!==1){
+        multipleArgumentStatus=true;
+      }
 
-    let lhsArr=lhs.replaceAll('+', ' ').replaceAll('-', ' ').replaceAll('*', ' ').replaceAll('/', ' ').split(' ');
-    lhsArr.push(rhsArr[0]);
-    for(let i=0;i<lhsArr.length;i++){
-      // check leading zeros and negative numbers
-      if(lhsArr[i]==="" || lhsArr[i][0]==="0"){
+      let lhsArr=lhs.replaceAll('+', ' ').replaceAll('-', ' ').replaceAll('*', ' ').replaceAll('/', ' ').split(' ');
+      lhsArr.push(rhsArr[0]);
+      for(let i=0;i<lhsArr.length;i++){
+        // check leading zeros and negative numbers
+        if(lhsArr[i]==="" || lhsArr[i][0]==="0"){
+          leadingZeroStatus=true;
+        }
+      }
+
+      try{
+        if(eval(lhs)!==eval(rhs)){
+          mathCorrectStatus=true;
+        }
+      }
+      catch(e){
+        console.log(e);
         leadingZeroStatus=true;
       }
-    }
-
-    try{
-      if(eval(lhs)!==eval(rhs)){
-        mathCorrectStatus=true;
-      }
-    }
-    catch(e){
-      console.log(e);
-      leadingZeroStatus=true;
-    }
+  }else lr=true;
     let response={};
-    response["Status"]=!(leadingZeroStatus || mathCorrectStatus || multipleArgumentStatus);
+    response["Status"]=!(lr||leadingZeroStatus || mathCorrectStatus || multipleArgumentStatus);
+    response["lr"]={status:leadingZeroStatus,message:"Equation must contain one equal sign"};
     response["leadingZeroStatus"]={status:leadingZeroStatus,message:"Leading zeros are not allowed"};
     response["mathCorrectStatus"]={status:mathCorrectStatus,message:"Equation is mathematically incorrect"};
     response["multipleArgumentStatus"]={status:multipleArgumentStatus,message:"Multiple arguments on RHS are not allowed"};
@@ -234,7 +252,7 @@ function App() {
   const onEnter = () =>{
     if(gameRun===false)return;
     if(currentColumn !== 8){
-      alert("Please enter a valid equation");
+      alert("Please enter a valid equation with length 8");
       return;
     }
     else{
@@ -247,7 +265,6 @@ function App() {
           setCurrentRow(currentRow+1);
           setGameRun(false);
           openModal("Win:You guessed the equation correctly");
-          // alert("Win");
         }
         else if(verdict.Commutative===true)
         {
@@ -255,7 +272,6 @@ function App() {
           setCurrentRow(currentRow+1);
           setGameRun(false);
           openModal("Win:Your guessed equation is commutatively correctly");
-          // alert("Win by commutative property");
         }
         else{
           setCurrentColumn(0);
@@ -263,20 +279,22 @@ function App() {
           if(currentRow===5){
             setGameRun(false);
             openModal("Lose:You have reached the maximum number of attempts");
-            // alert("Lose");
           }
         }
       }
       else{
         let errorMessage="Please enter a valid equation";
-        if(validation.leadingZeroStatus.status===true){
-          errorMessage+="\n"+validation.leadingZeroStatus.message;
-        }
-        if(validation.mathCorrectStatus.status===true){
-          errorMessage+="\n"+validation.mathCorrectStatus.message;
-        }
-        if(validation.multipleArgumentStatus.status===true){
-          errorMessage+="\n"+validation.multipleArgumentStatus.message;
+        if(validation.lr.status===true)errorMessage=validation.lr.message;
+        else{
+          if(validation.leadingZeroStatus.status===true){
+            errorMessage+="\n"+validation.leadingZeroStatus.message;
+          }
+          if(validation.mathCorrectStatus.status===true){
+            errorMessage+="\n"+validation.mathCorrectStatus.message;
+          }
+          if(validation.multipleArgumentStatus.status===true){
+            errorMessage+="\n"+validation.multipleArgumentStatus.message;
+          }
         }
         alert(errorMessage);
       }
