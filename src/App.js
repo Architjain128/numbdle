@@ -3,12 +3,9 @@ import React, { useState, createContext, useEffect } from "react";
 import { emptyBoard } from "./files/emptyBoard";
 import BoardComponent from "./files/board";
 import KeyboardComponent from "./files/keyboard";
+import Rules from "./files/rules";
 import Modal from 'react-modal';
 export const AppContext = createContext();
-
-// import env variables
-
-// import {AZURE_API_KEY,AZURE_API} from '.env';
 
 function App() {
   const [board, setBoard] = useState(emptyBoard);
@@ -16,17 +13,17 @@ function App() {
   const [currentColumn, setCurrentColumn] = useState(0);
   const [currentEquation, setCurrentEquation] = useState("");
   const [correctEquation, setCorrectEquation] = useState("1+8+2=11");
+  const [correctEquationId, setCorrectEquationId] = useState("-1");
   const [gameRun, setGameRun] = useState(true);
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = React.useState(true);
   const [modalData, setModalData] = React.useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-console.log(process.env.REACT_APP_MODE);
-
       const response = await fetch("https://archit-js.azurewebsites.net/api/nerdle?code="+process.env.REACT_APP_AZURE_API_KEY);
       const data = await response.json();
       setCorrectEquation(data.equation);
+      setCorrectEquationId(data.id);
     }
     fetchData();
   }, []);
@@ -42,14 +39,30 @@ console.log(process.env.REACT_APP_MODE);
     },
   };
 
+  const newGame = () => {
+    window.location.reload();
+  };
+
   const copy=(e)=>{
     e.target.innerText="Url Copied";
     var inp =document.createElement('input');
     document.body.appendChild(inp)
-    inp.value = e.target.value;
+    inp.value = process.env.REACT_APP_SHARE_MSG;
     inp.select();
     document.execCommand('copy',false);
     inp.remove();
+  }
+
+  const RuleScreen = () => {
+    return (
+      <>
+      <div class="modal-button" >
+        <button class="modal-button-b" onClick={()=>{closeModal()}}>Close</button>
+        <button class="modal-button-b" value="archit jain" onClick={(e)=>{copy(e)}}>Share</button>
+      </div>
+      <Rules/>
+      </>
+    )
   }
 
   const LoseScreen=()=>{
@@ -58,7 +71,7 @@ console.log(process.env.REACT_APP_MODE);
         <h1 >Game Ended</h1>
         <h2>You Lose!</h2>
         <h3>{modalData.split(":")[1]}</h3>
-        <p>The correct equation was: {correctEquation}</p>
+        <p>The correct equation was: "{correctEquation}"</p>
         <div class="modal-button" >
           <button class="modal-button-b" onClick={()=>{window.location.reload()}}>Play Again</button>
           <button class="modal-button-b" onClick={()=>{closeModal()}}>Close</button>
@@ -74,7 +87,7 @@ console.log(process.env.REACT_APP_MODE);
         <h1>Game Ended</h1>
         <h2>You Won!</h2>
         <h3>{modalData.split(":")[1]}</h3>
-        <p>The correct equation was: {correctEquation}</p>
+        <p>The correct equation was: "{correctEquation}"</p>
         <div class="modal-button">
           <button class="modal-button-b" onClick={()=>{window.location.reload()}}>Play Again</button>
           <button class="modal-button-b" onClick={()=>{closeModal()}}>Close</button>
@@ -114,7 +127,6 @@ console.log(process.env.REACT_APP_MODE);
         }
       }
     }
-    console.log(val,op)
     if(op.length===0){
       arr.push(eq);
     }
@@ -142,14 +154,12 @@ console.log(process.env.REACT_APP_MODE);
       tarr.push(val[2].toString()+op[1]+ val[0].toString()+op[0]+ val[1].toString())
       tarr.forEach(eqq => {if(eval(eqq)===rhs){arr.push(eqq)}});
     }
-    console.log(arr)
     return arr;
   }
 
   const checkCommutative = (eq1,eq2,val) => {
     let comStatus=false;
     let allCom = generativeComutativeEquation(eq1,val);
-    console.log(allCom)
     if(allCom.includes(eq2))comStatus=true;
     return comStatus;
   }
@@ -216,7 +226,6 @@ console.log(process.env.REACT_APP_MODE);
         }
       }
       catch(e){
-        console.log(e);
         leadingZeroStatus=true;
       }
   }else lr=true;
@@ -303,7 +312,21 @@ console.log(process.env.REACT_APP_MODE);
 
   return (
     <div className="App">
-      <nav><h1>Archit's NERDLE</h1></nav>
+      <nav>
+        <div></div>
+          <div class="nav-left">
+            <button class="nav-button" onClick={()=>{openModal("Rule:Rule")}}>ⓘ How to Play</button>
+          </div>
+          <div class="nav-center">
+          <h1>Archit's Numbel</h1>
+          </div>
+          <div class="nav-right">
+            <button class="nav-button" onClick={()=>{newGame()}}>New Game</button>
+            <button class="nav-button" onClick={(e)=>{copy(e)}}>Share</button>
+          </div>
+        <div></div>
+
+      </nav>
       <AppContext.Provider
         value={{
           board,
@@ -322,19 +345,18 @@ console.log(process.env.REACT_APP_MODE);
         }}
       >
         <div class="board">
+          <h5>Game Id: {correctEquationId}</h5>
           <BoardComponent />
           <KeyboardComponent />
           <Modal
             isOpen={modalIsOpen}
-            // onAfterOpen={afterOpenModal}
             onRequestClose={closeModal}
             style={customStyles}
           >
             <div class="modal-data">
-                {modalData.split(":")[0]==="Win"?WinScreen():LoseScreen()}
+                {modalData.split(":")[0]==="Win"?WinScreen():modalData.split(":")[0]==="Lose"?LoseScreen():RuleScreen()}
             </div>
-        
-      </Modal>
+          </Modal>
         </div>
       </AppContext.Provider>
       <Footer/>

@@ -13,28 +13,67 @@ body {
 }
 
 nav {
-  height: 60px;
   width: 100%;
   margin: 0;
   border-bottom: 1px solid grey;
-  display: grid;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
   place-items: center;
+}
+
+.nav-left{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.nav-center{
+  text-align: center;
+  white-space: nowrap;
+
+}
+.nav-right{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.nav-button{
+  white-space: nowrap;
+  margin: 5%;
+  padding: 7%;
+  width: fit-content;
+  color: white;
+  background-color: transparent;
+  font-size: 1em;
+  font-weight: bold;
+  border: 2px solid white;
+  border-radius: 10px;
 }
 
 nav h1 {
   margin: 0;
   font-family: Helvetica, Arial, sans-serif;
   color: white;
-  font-size: 45px;
+  font-size: 2em;
+  padding: 1%;
+}
+
+.board h5 {
+  margin: 1%;
+  font-family: Helvetica, Arial, sans-serif;
+  color: white;
+  /* font-size: 45px; */
 }
 
 
 .board {
   width: 100vw;
-  height: calc(100vh - 170px);
+  height: calc(100vh - 110px);
   display: flex;
   align-items: center;
-  padding-top: 50px;
+  padding-top: 10px;
   flex-direction: column;
 }
 
@@ -57,7 +96,8 @@ nav h1 {
 .block {
   flex: 33%;
   height: 100%;
-  border: 1px solid grey;
+  border: 2px solid grey;
+  border-radius: 8px;
   margin: 5px;
   display: grid;
   place-items: center;
@@ -76,13 +116,14 @@ nav h1 {
 }
 
 #wrongplace {
-  background-color: #3a393c;
+  background-color: #575658;
 }
 
 .keyboard {
   width: 700px;
-  height: 300px;
-  margin-top: 60px;
+  /* height: 300px; */
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .line1 {
@@ -103,14 +144,15 @@ nav h1 {
 
 .key {
   width: 50px;
-  height: 60px;
-  margin: 5px;
+  height: 50px;
+  margin: 4px;
   border-radius: 4px;
   display: grid;
   place-items: center;
   font-size: 20px;
   background-color: grey;
   color: white;
+  font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
   cursor: pointer;
 }
@@ -155,3 +197,35 @@ nav h1 {
   font-weight: bolder;
 }
 
+.rules ul{
+  text-align: left;
+}
+
+.example{
+  background-color: #303030;
+  color: white;
+  padding: 1%;
+  padding-left: 5%;
+  margin-right: 15%;
+}
+
+.color-example{
+  padding: 1%;
+  padding-left: 5%;
+  margin-right: 22%;
+}
+
+.block-rule {
+  flex: 33%;
+  height: 100%;
+  width: 5px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  margin: 2px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: bolder;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
