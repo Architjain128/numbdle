@@ -318,7 +318,7 @@ function App() {
             <button class="nav-button" onClick={()=>{openModal("Rule:Rule")}}>ⓘ How to Play</button>
           </div>
           <div class="nav-center">
-          <h1>Archit's Numbel</h1>
+          <h1>Archit's Numbdle</h1>
           </div>
           <div class="nav-right">
             <button class="nav-button" onClick={()=>{newGame()}}>New Game</button>

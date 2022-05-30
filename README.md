@@ -1,4 +1,4 @@
-# Archit's Numbel
+# Archit's Numbdle
 
 # How to play
 
