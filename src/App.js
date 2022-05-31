@@ -5,7 +5,6 @@ import BoardComponent from "./files/board";
 import KeyboardComponent from "./files/keyboard";
 import Rules from "./files/rules";
 import Modal from 'react-modal';
-import GameIcon from "./files/numbdle_icon_trp.png";
 export const AppContext = createContext();
 
 function App() {
@@ -203,6 +202,7 @@ function App() {
     let leadingZeroStatus=false;
     let mathCorrectStatus=false;
     let multipleArgumentStatus=false;
+    console.log(equation);
     if(equation.includes("=")){
       equation=equation.split("=");
       let lhs=equation[0];
@@ -215,7 +215,6 @@ function App() {
       let lhsArr=lhs.replaceAll('+', ' ').replaceAll('-', ' ').replaceAll('*', ' ').replaceAll('/', ' ').split(' ');
       lhsArr.push(rhsArr[0]);
       for(let i=0;i<lhsArr.length;i++){
-        // check leading zeros and negative numbers
         if(lhsArr[i]==="" || lhsArr[i][0]==="0"){
           leadingZeroStatus=true;
         }
@@ -232,7 +231,7 @@ function App() {
   }else lr=true;
     let response={};
     response["Status"]=!(lr||leadingZeroStatus || mathCorrectStatus || multipleArgumentStatus);
-    response["lr"]={status:leadingZeroStatus,message:"Equation must contain one equal sign"};
+    response["lr"]={status:lr,message:"Equation must contain one equal sign"};
     response["leadingZeroStatus"]={status:leadingZeroStatus,message:"Leading zeros are not allowed"};
     response["mathCorrectStatus"]={status:mathCorrectStatus,message:"Equation is mathematically incorrect"};
     response["multipleArgumentStatus"]={status:multipleArgumentStatus,message:"Multiple arguments on RHS are not allowed"};
@@ -319,14 +318,14 @@ function App() {
             <button class="nav-button" onClick={()=>{openModal("Rule:Rule")}}>ⓘ How to Play</button>
           </div>
           <div class="nav-center">
-            <img class="nav-icon" src={GameIcon} alt="Game Icon"></img>
-            <h1>Archit's Numbdle</h1>
+          <h1>Archit's Numbdle</h1>
           </div>
           <div class="nav-right">
             <button class="nav-button" onClick={()=>{newGame()}}>New Game</button>
             <button class="nav-button" onClick={(e)=>{copy(e)}}>Share</button>
           </div>
         <div></div>
+
       </nav>
       <AppContext.Provider
         value={{
@@ -353,13 +352,12 @@ function App() {
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
             style={customStyles}
-            >
+          >
             <div class="modal-data">
                 {modalData.split(":")[0]==="Win"?WinScreen():modalData.split(":")[0]==="Lose"?LoseScreen():RuleScreen()}
             </div>
           </Modal>
         </div>
-
       </AppContext.Provider>
       <Footer/>
     </div>
