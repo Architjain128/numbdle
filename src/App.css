@@ -32,7 +32,15 @@ nav {
 .nav-center{
   text-align: center;
   white-space: nowrap;
-
+  display: flex;
+  flex-direction: row;
+}
+.nav-icon{
+  width: 60px;
+  height: 40px;
+  padding: auto;
+  margin: auto;
+  margin-right: 3px;
 }
 .nav-right{
   display: flex;
