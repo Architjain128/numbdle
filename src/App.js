@@ -5,6 +5,7 @@ import BoardComponent from "./files/board";
 import KeyboardComponent from "./files/keyboard";
 import Rules from "./files/rules";
 import Modal from 'react-modal';
+import LoadingOverlay from 'react-loading-overlay';
 import GameIcon from "./files/numbdle_icon_trp.png";
 export const AppContext = createContext();
 
@@ -15,6 +16,7 @@ function App() {
   const [currentEquation, setCurrentEquation] = useState("");
   const [correctEquation, setCorrectEquation] = useState("1+8+2=11");
   const [correctEquationId, setCorrectEquationId] = useState("-1");
+  // const [backdrop, setBackdrop] = useState("block");
   const [gameRun, setGameRun] = useState(false);
   const [modalIsOpen, setIsOpen] = React.useState(true);
   const [modalData, setModalData] = React.useState("Rule:Rule");
@@ -25,6 +27,10 @@ function App() {
       const data = await response.json();
       setCorrectEquation(data.equation);
       setCorrectEquationId(data.id);
+      // setBackdrop("hidden");
+      let overlay=document.getElementById("overlay-id");
+      console.log(overlay);
+      overlay.style.display="none";
     }
     fetchData();
   }, []);
@@ -112,7 +118,6 @@ function App() {
   }
 
   const closeModal=()=>{
-
     if(modalData.split(":")[0]==="Rule"){setGameRun(true);}
     setIsOpen(false);
   }
@@ -329,7 +334,6 @@ function App() {
             <button class="nav-button" onClick={(e)=>{copy(e)}}>Share</button>
           </div>
         <div></div>
-
       </nav>
       <AppContext.Provider
         value={{
@@ -348,6 +352,15 @@ function App() {
           onSelectLetter,
         }}
       >
+        <div id="overlay-id">
+          <LoadingOverlay
+            active={true}
+            spinner
+            text="Connecting to server..."
+            class="overlay"
+          >
+          </LoadingOverlay>
+        </div>
         <div class="board">
           <h5>Game Id: {correctEquationId}</h5>
           <BoardComponent />

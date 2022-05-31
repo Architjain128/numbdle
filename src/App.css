@@ -88,7 +88,6 @@ nav h1 {
 .board-component {
   width: 600px;
   height: 550px;
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
 }
@@ -236,4 +235,20 @@ nav h1 {
   font-weight: bolder;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.overlay{
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.css-79elbk {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
 }
