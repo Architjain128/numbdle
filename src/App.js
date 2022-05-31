@@ -346,13 +346,13 @@ function App() {
           onSelectLetter,
         }}
       >
-        <LoadingOverlay
-          active={correctEquationId==="-1"}
-          spinner
-          text='Connecting to server...'
-          class="overlay"
-        >
-        </LoadingOverlay>
+//         <LoadingOverlay
+//           active={correctEquationId==="-1"}
+//           spinner
+//           text='Connecting to server...'
+//           class="overlay"
+//         >
+//         </LoadingOverlay>
         <div class="board">
           <h5>Game Id: {correctEquationId}</h5>
           <BoardComponent />
