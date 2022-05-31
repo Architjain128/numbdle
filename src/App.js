@@ -14,9 +14,9 @@ function App() {
   const [currentEquation, setCurrentEquation] = useState("");
   const [correctEquation, setCorrectEquation] = useState("1+8+2=11");
   const [correctEquationId, setCorrectEquationId] = useState("-1");
-  const [gameRun, setGameRun] = useState(true);
+  const [gameRun, setGameRun] = useState(false);
   const [modalIsOpen, setIsOpen] = React.useState(true);
-  const [modalData, setModalData] = React.useState("");
+  const [modalData, setModalData] = React.useState("Rule:Rule");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,10 +106,13 @@ function App() {
   
   const openModal=(value)=>{
     setModalData(value);
+    if(value.split(":")[0]==="Rule"){setGameRun(false);}
     setIsOpen(true);
   }
 
   const closeModal=()=>{
+
+    if(modalData.split(":")[0]==="Rule"){setGameRun(true);}
     setIsOpen(false);
   }
 
@@ -202,7 +205,6 @@ function App() {
     let leadingZeroStatus=false;
     let mathCorrectStatus=false;
     let multipleArgumentStatus=false;
-    console.log(equation);
     if(equation.includes("=")){
       equation=equation.split("=");
       let lhs=equation[0];
