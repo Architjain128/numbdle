@@ -5,6 +5,7 @@ import BoardComponent from "./files/board";
 import KeyboardComponent from "./files/keyboard";
 import Rules from "./files/rules";
 import Modal from 'react-modal';
+import GameIcon from "./files/numbdle_icon_trp.png";
 export const AppContext = createContext();
 
 function App() {
@@ -320,6 +321,7 @@ function App() {
             <button class="nav-button" onClick={()=>{openModal("Rule:Rule")}}>ⓘ How to Play</button>
           </div>
           <div class="nav-center">
+          <img class="nav-icon" src={GameIcon} alt="Game Icon"></img>
           <h1>Archit's Numbdle</h1>
           </div>
           <div class="nav-right">
