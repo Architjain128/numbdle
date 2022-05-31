@@ -6,7 +6,7 @@ import KeyboardComponent from "./files/keyboard";
 import Rules from "./files/rules";
 import Modal from 'react-modal';
 import GameIcon from "./files/numbdle_icon_trp.png";
-import LoadingOverlay from 'react-loading-overlay';
+// import LoadingOverlay from 'react-loading-overlay';
 export const AppContext = createContext();
 
 function App() {
