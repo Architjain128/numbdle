@@ -202,6 +202,7 @@ function App() {
     let leadingZeroStatus=false;
     let mathCorrectStatus=false;
     let multipleArgumentStatus=false;
+    console.log(equation);
     if(equation.includes("=")){
       equation=equation.split("=");
       let lhs=equation[0];
@@ -214,7 +215,6 @@ function App() {
       let lhsArr=lhs.replaceAll('+', ' ').replaceAll('-', ' ').replaceAll('*', ' ').replaceAll('/', ' ').split(' ');
       lhsArr.push(rhsArr[0]);
       for(let i=0;i<lhsArr.length;i++){
-        // check leading zeros and negative numbers
         if(lhsArr[i]==="" || lhsArr[i][0]==="0"){
           leadingZeroStatus=true;
         }
@@ -231,7 +231,7 @@ function App() {
   }else lr=true;
     let response={};
     response["Status"]=!(lr||leadingZeroStatus || mathCorrectStatus || multipleArgumentStatus);
-    response["lr"]={status:leadingZeroStatus,message:"Equation must contain one equal sign"};
+    response["lr"]={status:lr,message:"Equation must contain one equal sign"};
     response["leadingZeroStatus"]={status:leadingZeroStatus,message:"Leading zeros are not allowed"};
     response["mathCorrectStatus"]={status:mathCorrectStatus,message:"Equation is mathematically incorrect"};
     response["multipleArgumentStatus"]={status:multipleArgumentStatus,message:"Multiple arguments on RHS are not allowed"};
