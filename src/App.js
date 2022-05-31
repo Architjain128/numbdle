@@ -5,8 +5,6 @@ import BoardComponent from "./files/board";
 import KeyboardComponent from "./files/keyboard";
 import Rules from "./files/rules";
 import Modal from 'react-modal';
-import GameIcon from "./files/numbdle_icon_trp.png";
-// import LoadingOverlay from 'react-loading-overlay';
 export const AppContext = createContext();
 
 function App() {
@@ -320,14 +318,14 @@ function App() {
             <button class="nav-button" onClick={()=>{openModal("Rule:Rule")}}>ⓘ How to Play</button>
           </div>
           <div class="nav-center">
-            <img class="nav-icon" src={GameIcon} alt="Game Icon"></img>
-            <h1>Archit's Numbdle</h1>
+          <h1>Archit's Numbdle</h1>
           </div>
           <div class="nav-right">
             <button class="nav-button" onClick={()=>{newGame()}}>New Game</button>
             <button class="nav-button" onClick={(e)=>{copy(e)}}>Share</button>
           </div>
         <div></div>
+
       </nav>
       <AppContext.Provider
         value={{
@@ -346,13 +344,6 @@ function App() {
           onSelectLetter,
         }}
       >
-//         <LoadingOverlay
-//           active={correctEquationId==="-1"}
-//           spinner
-//           text='Connecting to server...'
-//           class="overlay"
-//         >
-//         </LoadingOverlay>
         <div class="board">
           <h5>Game Id: {correctEquationId}</h5>
           <BoardComponent />
@@ -361,13 +352,12 @@ function App() {
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
             style={customStyles}
-            >
+          >
             <div class="modal-data">
                 {modalData.split(":")[0]==="Win"?WinScreen():modalData.split(":")[0]==="Lose"?LoseScreen():RuleScreen()}
             </div>
           </Modal>
         </div>
-
       </AppContext.Provider>
       <Footer/>
     </div>
