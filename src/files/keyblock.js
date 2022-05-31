@@ -5,6 +5,7 @@ function KeyBlock({ keyVal, bigKey, disabled }) {
   const { onDelete,onEnter,onSelectLetter } = useContext(AppContext);
   
   const selectLetter =()=>{
+    console.log(keyVal);
     if(keyVal === "DELETE"){
       onDelete();
     }
