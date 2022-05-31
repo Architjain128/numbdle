@@ -6,7 +6,6 @@ import KeyboardComponent from "./files/keyboard";
 import Rules from "./files/rules";
 import Modal from 'react-modal';
 import GameIcon from "./files/numbdle_icon_trp.png";
-// import LoadingOverlay from 'react-loading-overlay';
 export const AppContext = createContext();
 
 function App() {
@@ -346,13 +345,6 @@ function App() {
           onSelectLetter,
         }}
       >
-//         <LoadingOverlay
-//           active={correctEquationId==="-1"}
-//           spinner
-//           text='Connecting to server...'
-//           class="overlay"
-//         >
-//         </LoadingOverlay>
         <div class="board">
           <h5>Game Id: {correctEquationId}</h5>
           <BoardComponent />
