@@ -5,8 +5,8 @@ import BoardComponent from "./files/board";
 import KeyboardComponent from "./files/keyboard";
 import Rules from "./files/rules";
 import Modal from 'react-modal';
-import GameIcon from "./files/numbdle_icon_trp.png";
 import LoadingOverlay from 'react-loading-overlay';
+import GameIcon from "./files/numbdle_icon_trp.png";
 export const AppContext = createContext();
 
 function App() {
@@ -16,9 +16,10 @@ function App() {
   const [currentEquation, setCurrentEquation] = useState("");
   const [correctEquation, setCorrectEquation] = useState("1+8+2=11");
   const [correctEquationId, setCorrectEquationId] = useState("-1");
-  const [gameRun, setGameRun] = useState(true);
+  // const [backdrop, setBackdrop] = useState("block");
+  const [gameRun, setGameRun] = useState(false);
   const [modalIsOpen, setIsOpen] = React.useState(true);
-  const [modalData, setModalData] = React.useState("");
+  const [modalData, setModalData] = React.useState("Rule:Rule");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +27,10 @@ function App() {
       const data = await response.json();
       setCorrectEquation(data.equation);
       setCorrectEquationId(data.id);
+      // setBackdrop("hidden");
+      let overlay=document.getElementById("overlay-id");
+      console.log(overlay);
+      overlay.style.display="none";
     }
     fetchData();
   }, []);
@@ -108,10 +113,12 @@ function App() {
   
   const openModal=(value)=>{
     setModalData(value);
+    if(value.split(":")[0]==="Rule"){setGameRun(false);}
     setIsOpen(true);
   }
 
   const closeModal=()=>{
+    if(modalData.split(":")[0]==="Rule"){setGameRun(true);}
     setIsOpen(false);
   }
 
@@ -216,7 +223,6 @@ function App() {
       let lhsArr=lhs.replaceAll('+', ' ').replaceAll('-', ' ').replaceAll('*', ' ').replaceAll('/', ' ').split(' ');
       lhsArr.push(rhsArr[0]);
       for(let i=0;i<lhsArr.length;i++){
-        // check leading zeros and negative numbers
         if(lhsArr[i]==="" || lhsArr[i][0]==="0"){
           leadingZeroStatus=true;
         }
@@ -233,7 +239,7 @@ function App() {
   }else lr=true;
     let response={};
     response["Status"]=!(lr||leadingZeroStatus || mathCorrectStatus || multipleArgumentStatus);
-    response["lr"]={status:leadingZeroStatus,message:"Equation must contain one equal sign"};
+    response["lr"]={status:lr,message:"Equation must contain one equal sign"};
     response["leadingZeroStatus"]={status:leadingZeroStatus,message:"Leading zeros are not allowed"};
     response["mathCorrectStatus"]={status:mathCorrectStatus,message:"Equation is mathematically incorrect"};
     response["multipleArgumentStatus"]={status:multipleArgumentStatus,message:"Multiple arguments on RHS are not allowed"};
@@ -320,8 +326,8 @@ function App() {
             <button class="nav-button" onClick={()=>{openModal("Rule:Rule")}}>ⓘ How to Play</button>
           </div>
           <div class="nav-center">
-            <img class="nav-icon" src={GameIcon} alt="Game Icon"></img>
-            <h1>Archit's Numbdle</h1>
+          <img class="nav-icon" src={GameIcon} alt="Game Icon"></img>
+          <h1>Archit's Numbdle</h1>
           </div>
           <div class="nav-right">
             <button class="nav-button" onClick={()=>{newGame()}}>New Game</button>
@@ -346,13 +352,15 @@ function App() {
           onSelectLetter,
         }}
       >
-        <LoadingOverlay
-          active={correctEquationId==="-1"}
-          spinner
-          text='Connecting to server...'
-          class="overlay"
-        >
-        </LoadingOverlay>
+        <div id="overlay-id">
+          <LoadingOverlay
+            active={true}
+            spinner
+            text="Connecting to server..."
+            class="overlay"
+          >
+          </LoadingOverlay>
+        </div>
         <div class="board">
           <h5>Game Id: {correctEquationId}</h5>
           <BoardComponent />
@@ -361,13 +369,12 @@ function App() {
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
             style={customStyles}
-            >
+          >
             <div class="modal-data">
                 {modalData.split(":")[0]==="Win"?WinScreen():modalData.split(":")[0]==="Lose"?LoseScreen():RuleScreen()}
             </div>
           </Modal>
         </div>
-
       </AppContext.Provider>
       <Footer/>
     </div>

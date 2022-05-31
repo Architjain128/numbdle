@@ -88,7 +88,6 @@ nav h1 {
 .board-component {
   width: 600px;
   height: 550px;
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
 }
@@ -245,7 +244,6 @@ nav h1 {
   top: 0;
   left: 0;
 }
-
 
 .css-79elbk {
   position: absolute !important;
